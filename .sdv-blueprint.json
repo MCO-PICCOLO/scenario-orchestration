@@ -1,0 +1,10 @@
+{
+  "name": "scenario-orchestration",
+  "version": "0.1.0",
+  "description": "Orchestrates whole vehicle scenarios across multiple nodes with Pullpiri, Timpani and Kuksa, driven by VSS signals.",
+  "participatingProjects": [
+    { "id": "automotive.kuksa" },
+    { "id": "automotive.pullpiri" },
+    { "id": "automotive.timpani" }
+  ]
+}

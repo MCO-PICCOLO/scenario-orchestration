@@ -1,0 +1,162 @@
+# /********************************************************************************
+# * Copyright (c) 2026 Contributors to the Eclipse Foundation
+# *
+# * See the NOTICE file(s) distributed with this work for additional
+# * information regarding copyright ownership.
+# *
+# * This program and the accompanying materials are made available under the
+# * terms of the Apache License 2.0 which is available at
+# * https://www.apache.org/licenses/LICENSE-2.0
+# *
+# * SPDX-License-Identifier: Apache-2.0
+# ********************************************************************************/
+
+# ${NODE_NAME} is replaced by serial-bridge/serial/bridge.py with the NODE_NAME
+# value from test_script/config.env before the YAML is sent to Pullpiri.
+
+---
+apiVersion: v1
+kind: Schedule
+metadata:
+  name: led_timpani_schedule
+spec:
+  - name: led_timpani
+    priority: 50
+    policy: FIFO
+    cpu_affinity: 4096
+    period: 500000
+    release_time: 0
+    runtime: 10000
+    deadline: 500000
+    node_id: ${NODE_NAME}
+    max_dmiss: 3
+---
+apiVersion: v1
+kind: Scenario
+metadata:
+  name: led_timpani_test
+spec:
+  condition: null
+  action: launch
+  target: led_timpani_test
+---
+apiVersion: v1
+kind: Package
+metadata:
+  label: null
+  name: led_timpani_test
+spec:
+  schedule: led_timpani_schedule
+  pattern:
+    - type: plain
+  models:
+    - name: kuksa-bridge
+      node: ${NODE_NAME}
+      resources:
+        volume:
+        network:
+    - name: led_timpani_model
+      node: ${NODE_NAME}
+      resources:
+        volume:
+        network:
+    - name: led_normal_model
+      node: ${NODE_NAME}
+      resources:
+        volume:
+        network:
+---
+apiVersion: v1
+kind: Model
+metadata:
+  name: kuksa-bridge
+  annotations:
+    io.piccolo.annotations.package-type: led_timpani_test
+    io.piccolo.annotations.package-name: led_timpani_test
+    io.piccolo.annotations.package-network: default
+  labels:
+    app: kuksa-bridge
+spec:
+  containers:
+    - name: kuksa-bridge-container
+      image: localhost/resiso-kuksa-bridge:latest
+  terminationGracePeriodSeconds: 0
+  restartPolicy: Never
+---
+apiVersion: v1
+kind: Model
+metadata:
+  name: led_timpani_model
+  annotations:
+    io.piccolo.annotations.package-type: led_timpani_test
+    io.piccolo.annotations.package-name: led_timpani_test
+    io.piccolo.annotations.package-network: default
+  labels:
+    app: led_timpani_model
+spec:
+  hostNetwork: true
+  containers:
+    - name: led_timpani
+      image: localhost/led-timpani-controller:latest
+      securityContext:
+        privileged: true
+        capabilities:
+          add: ["SYS_NICE"]
+      env:
+        - name: BUSY_ITERATIONS
+          value: "10000000"
+      volumeMounts:
+        - name: arduino-device
+          mountPath: /dev/arduino_led_timpani
+        - name: tmp-sync
+          mountPath: /tmp
+  volumes:
+    - name: arduino-device
+      hostPath:
+        path: /dev/arduino_led_timpani
+        type: CharDevice
+    - name: tmp-sync
+      hostPath:
+        path: /tmp
+        type: Directory
+  terminationGracePeriodSeconds: 0
+  restartPolicy: Never
+---
+apiVersion: v1
+kind: Model
+metadata:
+  name: led_normal_model
+  annotations:
+    io.piccolo.annotations.package-type: led_timpani_test
+    io.piccolo.annotations.package-name: led_timpani_test
+    io.piccolo.annotations.package-network: default
+  labels:
+    app: led_normal_model
+spec:
+  hostNetwork: true
+  containers:
+    - name: led_normal
+      image: localhost/led-normal-controller:latest
+      securityContext:
+        privileged: true
+      env:
+        - name: CPU_AFFINITY
+          value: "10"
+        - name: BUSY_ITERATIONS
+          value: "10000000"
+      volumeMounts:
+        - name: arduino-normal-device
+          mountPath: /dev/arduino_led_normal
+        - name: tmp-sync
+          mountPath: /tmp
+  volumes:
+    - name: arduino-normal-device
+      hostPath:
+        path: /dev/arduino_led_normal
+        type: CharDevice
+    - name: tmp-sync
+      hostPath:
+        path: /tmp
+        type: Directory
+  terminationGracePeriodSeconds: 0
+  restartPolicy: Never

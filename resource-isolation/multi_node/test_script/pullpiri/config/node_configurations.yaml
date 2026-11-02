@@ -1,0 +1,31 @@
+# /********************************************************************************
+# * Copyright (c) 2026 Contributors to the Eclipse Foundation
+# *
+# * See the NOTICE file(s) distributed with this work for additional
+# * information regarding copyright ownership.
+# *
+# * This program and the accompanying materials are made available under the
+# * terms of the Apache License 2.0 which is available at
+# * https://www.apache.org/licenses/LICENSE-2.0
+# *
+# * SPDX-License-Identifier: Apache-2.0
+# ********************************************************************************/
+
+# TTRT Global Scheduler - Node Configuration File
+# Defines hardware specs and available resources for each node
+
+nodes:
+  master:
+    # Master node
+    available_cpus: [12, 13, 14, 15]
+    max_memory_mb: 31000
+    architecture: "x86_64"
+    location: "local_master_pc"
+    description: "Master node"
+  guest:
+    # Guest node
+    available_cpus: [12, 13, 14, 15]
+    max_memory_mb: 31114
+    architecture: "x86_64"
+    location: "guest_node"
+    description: "Guest node"

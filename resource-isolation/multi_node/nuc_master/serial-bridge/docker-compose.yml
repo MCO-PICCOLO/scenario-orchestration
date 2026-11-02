@@ -1,0 +1,60 @@
+# /********************************************************************************
+# * Copyright (c) 2026 Contributors to the Eclipse Foundation
+# *
+# * See the NOTICE file(s) distributed with this work for additional
+# * information regarding copyright ownership.
+# *
+# * This program and the accompanying materials are made available under the
+# * terms of the Apache License 2.0 which is available at
+# * https://www.apache.org/licenses/LICENSE-2.0
+# *
+# * SPDX-License-Identifier: Apache-2.0
+# ********************************************************************************/
+
+configs:
+  vss_overlay.json:
+    file: "./spec/vss.json"
+
+services:
+  resiso-serial-bridge:
+    build:
+      context: ./serial
+    image: serial-bridge:latest
+    container_name: resiso-serial-bridge
+    devices:
+      - "/dev/arduino_joystick:/dev/arduino_joystick"
+      - "/dev/arduino_led:/dev/arduino_led"
+      - "/dev/arduino_gear:/dev/arduino_gear"
+    volumes:
+      - ./serial:/app
+      - ./pullpiri-yaml:/yaml
+    working_dir: /app
+    command: python3 bridge.py
+    environment:
+      PYTHONUNBUFFERED: "1"
+      # Master's internal-network IP where the Pullpiri apiserver listens.
+      # The orchestrator passes MASTER_IP=MASTER_NODE_IP (auto-detected). When run
+      # manually without it, falls back to the docker host gateway.
+      MASTER_IP: "${MASTER_IP:-host.docker.internal}"
+      # Guest node name substituted for ${NODE_NAME} in pullpiri-yaml/*.yaml. The
+      # orchestrator passes GUEST_NODE_NAME; it must match the guest nodeagent name.
+      NODE_NAME: "${GUEST_NODE_NAME:-}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - resiso-databroker
+
+  resiso-databroker:
+    image: "quay.io/eclipse-kuksa/kuksa-databroker:0.6.0"
+    container_name: "resiso-databroker"
+    ports:
+      - "55556:55555"
+    configs:
+      - "vss_overlay.json"
+    environment:
+      KUKSA_DATABROKER_ADDR: "0.0.0.0"
+      KUKSA_DATABROKER_PORT: "55555"
+      KUKSA_DATABROKER_METADATA_FILE: "/vss_overlay.json"
+      RUST_LOG: "info"
+    # for the time being, we do not use TLS secured connections to Databroker
+    command: "--insecure"

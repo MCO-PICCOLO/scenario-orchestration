@@ -1,0 +1,27 @@
+# /********************************************************************************
+# * Copyright (c) 2026 Contributors to the Eclipse Foundation
+# *
+# * See the NOTICE file(s) distributed with this work for additional
+# * information regarding copyright ownership.
+# *
+# * This program and the accompanying materials are made available under the
+# * terms of the Apache License 2.0 which is available at
+# * https://www.apache.org/licenses/LICENSE-2.0
+# *
+# * SPDX-License-Identifier: Apache-2.0
+# ********************************************************************************/
+
+# Joystick Arduino
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{serial}=="48CA435E506C", SYMLINK+="arduino_joystick"
+
+# LED Arduino
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{serial}=="F0F5BD507E9C", SYMLINK+="arduino_led"
+
+# Gear Arduino
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{serial}=="D885ACA7070C", SYMLINK+="arduino_gear"
+
+# LED Arduino for TIMPANI signal-based control
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{serial}=="3CDC75F03F08", SYMLINK+="arduino_led_timpani"
+
+# LED Arduino for normal sleep-based control
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{serial}=="3CDC75F04E2C", SYMLINK+="arduino_led_normal"

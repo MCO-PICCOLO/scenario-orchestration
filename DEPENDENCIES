@@ -1,0 +1,24 @@
+git/github/adafruit/Adafruit_NeoPixel/1.15.1, LGPL-3.0-or-later, restricted, clearlydefined
+pypi/pypi/-/Pygments/2.21.0, BSD-2-Clause AND LicenseRef-Public-domain AND Apache-2.0 AND MIT, approved, #30526
+pypi/pypi/-/certifi/2026.10.23, MPL-2.0, approved, #32561
+pypi/pypi/-/charset-normalizer/3.5.2, (0BSD AND LGPL-2.0-or-later AND MIT) AND CC-BY-SA-3.0, approved, #32409
+pypi/pypi/-/cmd2/4.3.1, , restricted, clearlydefined
+pypi/pypi/-/grpcio-tools/1.82.1, Apache-2.0 AND BSD-3-Clause AND MIT AND Zlib AND LicenseRef-Public-domain, approved, #30410
+pypi/pypi/-/grpcio/1.84.1, , restricted, clearlydefined
+pypi/pypi/-/idna/3.20, BSD-3-Clause, approved, #32405
+pypi/pypi/-/jsonpath-ng/1.13.0, , restricted, clearlydefined
+pypi/pypi/-/kuksa-client/0.6.0, , restricted, clearlydefined
+pypi/pypi/-/markdown-it-py/4.2.0, MIT, approved, clearlydefined
+pypi/pypi/-/mdurl/0.1.2, MIT, approved, clearlydefined
+pypi/pypi/-/prompt_toolkit/3.0.53, BSD-2-Clause AND BSD-3-Clause, approved, clearlydefined
+pypi/pypi/-/protobuf/7.36.2, BSD-3-Clause AND MIT, approved, #30527
+pypi/pypi/-/pyperclip/1.11.0, BSD-3-Clause, approved, #29418
+pypi/pypi/-/pyserial/3.5, BSD-3-Clause, approved, #1636
+pypi/pypi/-/python-dotenv/1.2.4, BSD-3-Clause, approved, #25638
+pypi/pypi/-/requests/2.34.2, Apache-2.0 AND MIT AND Apache-2.0, approved, #28313
+pypi/pypi/-/rich-argparse/1.8.0, MIT, approved, #30413
+pypi/pypi/-/rich/15.0.0, MIT, approved, clearlydefined
+pypi/pypi/-/typing_extensions/4.16.0, BSD-3-Clause AND PSF-2.0, approved, #29845
+pypi/pypi/-/urllib3/2.8.0, MIT AND Python-2.0 AND MPL-2.0, approved, #32426
+pypi/pypi/-/wcwidth/0.9.4, MIT AND HPND-Markus-Kuhn, approved, #32403
+pypi/pypi/-/websockets/17.3, , restricted, clearlydefined
