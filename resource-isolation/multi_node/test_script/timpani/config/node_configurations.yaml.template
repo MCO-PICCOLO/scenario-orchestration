@@ -21,15 +21,16 @@
 
 nodes:
   ${MASTER_NODE_NAME}:
-    # Master node
-    available_cpus: [12, 13, 14, 15]
+    # Master node. Default remains the reference hardware's 12-15 CPU layout, but
+    # the install script can override it via AVAILABLE_CPUS when needed.
+    available_cpus: ${MASTER_AVAILABLE_CPUS}
     max_memory_mb: 31000
     architecture: "x86_64"
     location: "local_master_pc"
     description: "Master node"
   ${GUEST_NODE_NAME}:
     # Guest node
-    available_cpus: [12, 13, 14, 15]
+    available_cpus: ${GUEST_AVAILABLE_CPUS}
     max_memory_mb: 31114
     architecture: "x86_64"
     location: "guest_node"

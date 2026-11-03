@@ -76,6 +76,20 @@ def read_timpani_state() -> bool | None:
         return None
 
 
+def resolve_cpu_affinity(default: int) -> int:
+    """Prefer the current process affinity mask, but fall back to the host CPU count."""
+    try:
+        allowed = os.sched_getaffinity(0)
+        if allowed:
+            return max(allowed)
+    except (AttributeError, OSError):
+        pass
+    cpu_count = os.cpu_count() or 1
+    if cpu_count > 1:
+        return max(0, min(default, cpu_count - 1))
+    return default
+
+
 class ComputationWorker:
     """Perform CPU load computation in separate thread"""
 
@@ -156,8 +170,16 @@ def main():
     global g_running
 
     # Environment variables
-    cpu_affinity = get_env_int("CPU_AFFINITY", 12)
+    cpu_affinity = get_env_int("CPU_AFFINITY", resolve_cpu_affinity(12))
     busy_iterations = get_env_int("BUSY_ITERATIONS", DEFAULT_BUSY_ITERATIONS)
+
+    # Remove stale sync state from previous runs.
+    for stale in (SYNC_FILE, LED_STATE_FILE):
+        try:
+            if os.path.exists(stale):
+                os.remove(stale)
+        except OSError:
+            pass
 
     # Set CPU affinity
     try:

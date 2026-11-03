@@ -44,6 +44,14 @@ die() { echo "[install-timpani-o] ERROR: $*" >&2; exit 1; }
 
 [[ "${EUID}" -eq 0 ]] || die "Please run as root: sudo $0"
 
+build_cpu_list() {
+    if [[ -n "${AVAILABLE_CPUS:-}" ]]; then
+        printf '%s' "${AVAILABLE_CPUS}"
+        return 0
+    fi
+    printf '%s' "[12, 13, 14, 15]"
+}
+
 # --- render the node config from the template --------------------------------
 render_node_config() {
     local master="${MASTER_NODE_NAME:-}" guest="${GUEST_NODE_NAME:-}" var
@@ -55,14 +63,18 @@ render_node_config() {
         || die "MASTER_NODE_NAME and GUEST_NODE_NAME must differ (both '${master}')"
     [[ -f "${NODE_CONFIG_TEMPLATE}" ]] || die "Template not found: ${NODE_CONFIG_TEMPLATE}"
 
-    local content
+    local content master_cpus guest_cpus
+    master_cpus="$(build_cpu_list)"
+    guest_cpus="$(build_cpu_list)"
     content="$(<"${NODE_CONFIG_TEMPLATE}")"
     content="${content//\$\{MASTER_NODE_NAME\}/${master}}"
     content="${content//\$\{GUEST_NODE_NAME\}/${guest}}"
+    content="${content//\$\{MASTER_AVAILABLE_CPUS\}/${master_cpus}}"
+    content="${content//\$\{GUEST_AVAILABLE_CPUS\}/${guest_cpus}}"
     install -d -m 0755 "${RENDER_DIR}"
     NODE_CONFIG_YAML="${RENDER_DIR}/node_configurations.yaml"
     printf '%s\n' "${content}" > "${NODE_CONFIG_YAML}"
-    log "Rendered ${NODE_CONFIG_YAML} (master='${master}', guest='${guest}')"
+    log "Rendered ${NODE_CONFIG_YAML} (master='${master}', guest='${guest}', master_cpus=${master_cpus}, guest_cpus=${guest_cpus})"
 }
 
 # --- pull the image and run the container -----------------------------------

@@ -27,10 +27,10 @@ test_script/
 - guest: `podman`, `arduino-cli`
 - master PC: `ssh`, and `sshpass` (when using password authentication)
 - Arduino boards: the udev rules ([master](../nuc_master/arduino/99-arduino.rules),
-  [guest](../nuc_guest/arduino/99-arduino-led.rules)) match boards by USB serial
-  number. Replace every `ATTRS{serial}` value with the serial of your own boards
-  before running the preflight scripts (find it with
-  `udevadm info -a -n /dev/ttyACM0 | grep '{serial}' -m 1` or `arduino-cli board list`).
+  [guest](../nuc_guest/arduino/99-arduino-led.rules)) are hardware-specific and
+  depend on each board's USB serial. Replace every `ATTRS{serial}` value with the
+  serial of your own boards before running the preflight scripts (find it with
+  `udevadm info -a -n /dev/ttyACM0 | grep '{serial}' -m 1` or `arduino-cli board list`). This is a per-hardware configuration step and not a generic runtime setting.
 
 ## config.env
 

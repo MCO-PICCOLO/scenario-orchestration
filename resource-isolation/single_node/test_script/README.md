@@ -24,10 +24,10 @@ test_script/
   non-interactive runs use passwordless sudo, or export `SUDO_PASS` (it is sent to
   sudo through stdin, never as a command-line argument)
 - Arduino boards: the udev rules in
-  [../arduino/99-arduino-led.rules](../arduino/99-arduino-led.rules) match boards
-  by USB serial number. Replace every `ATTRS{serial}` value with the serial of
-  your own boards before running `prepare.sh` (find it with
-  `udevadm info -a -n /dev/ttyACM0 | grep '{serial}' -m 1` or `arduino-cli board list`).
+  [../arduino/99-arduino-led.rules](../arduino/99-arduino-led.rules) are
+  hardware-specific and depend on each board's USB serial. Replace every
+  `ATTRS{serial}` value with the serial of your own boards before running
+  `prepare.sh` (find it with `udevadm info -a -n /dev/ttyACM0 | grep '{serial}' -m 1` or `arduino-cli board list`). This is a per-hardware configuration step and not a generic runtime setting.
 
 ## config.env
 

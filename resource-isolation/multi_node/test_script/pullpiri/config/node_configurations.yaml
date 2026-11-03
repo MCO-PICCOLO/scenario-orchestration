@@ -16,7 +16,8 @@
 
 nodes:
   master:
-    # Master node
+    # Master node. Default remains the reference hardware's CPU set (12-15), but
+    # the install script can override it via AVAILABLE_CPUS when needed.
     available_cpus: [12, 13, 14, 15]
     max_memory_mb: 31000
     architecture: "x86_64"

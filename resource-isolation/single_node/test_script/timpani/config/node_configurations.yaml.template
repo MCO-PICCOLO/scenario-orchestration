@@ -22,8 +22,9 @@
 
 nodes:
   ${NODE_NAME}:
-    # Single node (this machine)
-    available_cpus: [12, 13, 14, 15]
+    # Single node (this machine). Default is the existing 12-15 CPU mask from the
+    # reference setup, but the install script may override it via AVAILABLE_CPUS.
+    available_cpus: ${AVAILABLE_CPUS}
     max_memory_mb: 31000
     architecture: "x86_64"
     location: "local"

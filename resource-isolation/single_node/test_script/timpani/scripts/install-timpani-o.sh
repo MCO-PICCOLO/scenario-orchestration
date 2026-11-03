@@ -43,6 +43,14 @@ die() { echo "[install-timpani] ERROR: $*" >&2; exit 1; }
 
 [[ "${EUID}" -eq 0 ]] || die "Please run as root: sudo $0"
 
+build_cpu_list() {
+    if [[ -n "${AVAILABLE_CPUS:-}" ]]; then
+        printf '%s' "${AVAILABLE_CPUS}"
+        return 0
+    fi
+    printf '%s' "[12, 13, 14, 15]"
+}
+
 # --- render the node config from the template --------------------------------
 render_node_config() {
     local name="${NODE_NAME:-}"
@@ -51,11 +59,15 @@ render_node_config() {
     [[ -f "${NODE_CONFIG_TEMPLATE}" ]] || die "Template not found: ${NODE_CONFIG_TEMPLATE}"
 
     local content
+    local available_cpus
+    available_cpus="$(build_cpu_list)"
     content="$(<"${NODE_CONFIG_TEMPLATE}")"
+    content="${content//\$\{NODE_NAME\}/${name}}"
+    content="${content//\$\{AVAILABLE_CPUS\}/${available_cpus}}"
     install -d -m 0755 "${RENDER_DIR}"
     NODE_CONFIG_YAML="${RENDER_DIR}/node_configurations.yaml"
-    printf '%s\n' "${content//\$\{NODE_NAME\}/${name}}" > "${NODE_CONFIG_YAML}"
-    log "Rendered ${NODE_CONFIG_YAML} for node '${name}'"
+    printf '%s\n' "${content}" > "${NODE_CONFIG_YAML}"
+    log "Rendered ${NODE_CONFIG_YAML} for node '${name}' with CPUs ${available_cpus}"
 }
 
 # --- pull the image and run the container -----------------------------------
