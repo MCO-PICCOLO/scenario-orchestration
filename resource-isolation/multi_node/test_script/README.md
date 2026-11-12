@@ -23,7 +23,7 @@ test_script/
 
 - `sdv-blueprint` deployed on each node (paths set independently via
   `MASTER_BASE_DIR` / `GUEST_BASE_DIR` in config.env — they may differ)
-- master: `docker`, `arduino-cli`, `podman`
+- master: `docker`, `arduino-cli`, `podman`, `iptables` with the `conntrack` match
 - guest: `podman`, `arduino-cli`
 - master PC: `ssh`, and `sshpass` (when using password authentication)
 - Arduino boards: the udev rules ([master](../nuc_master/arduino/99-arduino.rules),
@@ -127,6 +127,8 @@ The script drives both nodes over SSH in order, then waits for Arduino input at 
   steps still run; the script exits non-zero at the end if any step failed.
 - The Step 6 log watch starts from the moment the run began (read from the master's
   clock), so a launch request sent before Step 6 is still detected.
+- Start/stop scripts add/remove an `iptables` FORWARD ACCEPT rule for guest-to-TIMPANI-O TCP port 7777.
+- Stop before changing node IPs in `config.env`.
 
 - `GUEST_NODE_NAME` is the single source of truth for the guest's Pullpiri node name. The run flow applies
   it to the guest nodeagent, the workload YAMLs (`${NODE_NAME}` placeholder, rendered by the serial-bridge),
