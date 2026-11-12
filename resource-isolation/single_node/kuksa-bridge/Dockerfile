@@ -32,6 +32,7 @@ RUN apt-get update && \
     procps \
     psmisc \
     util-linux \
+    tini \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -43,4 +44,5 @@ RUN chmod +x /app/script/*.sh
 # Disable Python output buffering for real-time logs
 ENV PYTHONUNBUFFERED=1
 
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["python3", "-u", "bridge.py"]
